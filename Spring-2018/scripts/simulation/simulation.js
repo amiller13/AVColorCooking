@@ -1,11 +1,11 @@
 var MAX_POWER = 100000
 
-var simulation_power_values = { // watts 
-    "oven": [100, 100000, 10, 100], // init power, max_power, growth_rate, shrink_rate
-    "fridge": [100, 20000, 10, 100],
-    "toaster": [100, 30000, 10, 100],
-    "rangehood": [100, 80000, 10, 100],
-    "light": [100, 10000, 10, 100]
+var simulation_power_values = { // watts
+    "oven": [80, 100000, 40, 100], // init power, max_power, growth_rate, shrink_rate
+    "fridge": [100, 20000, 50, 100],
+    "toaster": [100, 30000, 50, 100],
+    "rangehood": [100, 80000, 50, 100],
+    "light": [100, 10000, 50, 100]
 };
 
 
@@ -24,12 +24,17 @@ function Appliance(name){ // maybe add power information taken from config
     },
     this.update = function() {
         if(this.running){
-	    this.power = Math.min(this.power + this.growth_rate, this.max_power);
-            this.energy += this.power*(REFRESH_RATE/3600000); // convert to kwh
-        } else {
+          if(meal){
+	           this.power = Math.min(this.power + this.growth_rate, this.max_power)
+             this.energy += this.power*((5*REFRESH_RATE)/3600000);}
+             else{
+               this.energy = this.energy;            }
+             }
+      // convert to kwh
+         else {
 	    this.power = Math.max(this.power - this.shrink_rate, 0);
-	}
-    },
+	   }
+    }
     this.get_energy = function() {
         return this.energy;
     },
@@ -43,4 +48,3 @@ function Appliance(name){ // maybe add power information taken from config
 	return this.min_power;
     }
 }
-
